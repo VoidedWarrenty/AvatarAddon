@@ -1,4 +1,4 @@
-import { world, system } from "@minecraft/server";
+import { world, system, ItemStack } from "@minecraft/server";
 import { openMain } from "./ui.js";
 import { startInputLoop, forgetPlayer, onPlayerAttack } from "./input.js";
 import { loadState, saveState } from "./state.js";
@@ -71,12 +71,37 @@ if (world.afterEvents.entityHitBlock) {
   });
 }
 
+if (world.afterEvents.itemUse) {
+  world.afterEvents.itemUse.subscribe((ev) => {
+    if (ev.itemStack && ev.itemStack.typeId === "avatar:scroll") {
+      const p = ev.source;
+      if (!p || p.typeId !== "minecraft:player") return;
+      system.run(() => safeRun(() => openMain(p)));
+    }
+  });
+}
+
+function giveScrollIfMissing(player) {
+  const invComp = safeRun(() => player.getComponent("minecraft:inventory"));
+  if (!invComp) return;
+  const cont = invComp.container;
+  if (!cont) return;
+  for (let i = 0; i < cont.size; i++) {
+    const it = safeRun(() => cont.getItem(i));
+    if (it && it.typeId === "avatar:scroll") return;
+  }
+  const stack = safeRun(() => new ItemStack("avatar:scroll", 1));
+  if (stack) safeRun(() => cont.addItem(stack));
+}
+
 world.afterEvents.playerSpawn.subscribe((ev) => {
-  if (!ev.initialSpawn) return;
   const p = ev.player;
-  system.runTimeout(() => {
-    msg(p, "§6Avatar loaded — chat §f.a§6 or §f/scriptevent avatar:menu§6.");
-  }, 40);
+  if (ev.initialSpawn) {
+    system.runTimeout(() => {
+      msg(p, "§6Avatar loaded — §fright-click your Avatar Scroll§6 to open the menu.");
+    }, 40);
+  }
+  system.runTimeout(() => safeRun(() => giveScrollIfMissing(p)), 20);
   bustSidebarCache();
 });
 

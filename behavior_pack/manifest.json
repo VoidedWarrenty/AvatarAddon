@@ -1,30 +1,30 @@
 {
   "format_version": 2,
   "header": {
-    "name": "Avatar: The Last Airbender BP v0.2.0",
-    "description": "Bending abilities, sidebar HUD, chargeup + primed + combo activation. v0.2.0",
+    "name": "Avatar: The Last Airbender BP v0.3.0",
+    "description": "Bending abilities, sidebar HUD, scroll item, chargeup + primed + combo activation. v0.3.0",
     "uuid": "7f2a1c40-5b4a-4e2a-9d10-1a2b3c4d5e01",
-    "version": [0, 2, 0],
+    "version": [0, 3, 0],
     "min_engine_version": [1, 21, 50]
   },
   "modules": [
     {
       "type": "data",
       "uuid": "7f2a1c40-5b4a-4e2a-9d10-1a2b3c4d5e02",
-      "version": [0, 2, 0]
+      "version": [0, 3, 0]
     },
     {
       "type": "script",
       "language": "javascript",
       "entry": "scripts/main.js",
       "uuid": "7f2a1c40-5b4a-4e2a-9d10-1a2b3c4d5e03",
-      "version": [0, 2, 0]
+      "version": [0, 3, 0]
     }
   ],
   "dependencies": [
     {
       "uuid": "8e1b2d50-6c5b-5f3b-ae21-2b3c4d5e6f01",
-      "version": [0, 2, 0]
+      "version": [0, 3, 0]
     },
     {
       "module_name": "@minecraft/server",

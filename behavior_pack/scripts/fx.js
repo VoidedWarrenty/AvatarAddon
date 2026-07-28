@@ -1,5 +1,5 @@
-import { MolangVariableMap } from "@minecraft/server";
-import { V } from "./util.js";
+import { MolangVariableMap, system } from "@minecraft/server";
+import { V, safeRun } from "./util.js";
 
 function mv(dir = { x: 0, y: 1, z: 0 }) {
   const m = new MolangVariableMap();
@@ -41,9 +41,8 @@ const PALETTE = {
     ["minecraft:evocation_fang_particle", 1],
   ],
   lightning: [
-    ["minecraft:soul_flame_particle", 4],
-    ["minecraft:conduit_particle", 3],
-    ["minecraft:sculk_charge_pop_particle", 2],
+    ["avatar:blue_bolt", 5],
+    ["avatar:blue_spark", 3],
   ],
   heal: [
     ["minecraft:heart_particle", 1],
@@ -167,4 +166,84 @@ export function damageAlongPath(dim, from, dir, length, radius, source, damageFn
     }
     pos = V.add(pos, V.scale(dir, step));
   }
+}
+
+// Animated forked bolt — segments render over time, damage fires as each
+// segment reaches an entity. `onEntityHit(entity, segmentIndex)` is called
+// once per entity (globally deduped across the bolt + all branches).
+export function animatedForkedBolt(dim, start, initialDir, opts) {
+  const {
+    color = "lightning",
+    length = 24,
+    segLen = 0.7,
+    segmentsPerTick = 4,
+    hitRadius = 1.6,
+    branchChance = 0.35,
+    depth = 3,
+    source,
+    onSegment,
+    onEntityHit,
+    seen,
+  } = opts;
+  const totalSteps = Math.max(1, Math.floor(length / segLen));
+  const hitSet = seen || new Set();
+  let pos = { ...start };
+  let d = { ...initialDir };
+  let step = 0;
+  const handle = system.runInterval(() => {
+    for (let sub = 0; sub < segmentsPerTick; sub++) {
+      if (step >= totalSteps) { system.clearRun(handle); return; }
+      d = V.norm({
+        x: d.x + (Math.random() - 0.5) * 0.5,
+        y: d.y + (Math.random() - 0.5) * 0.45,
+        z: d.z + (Math.random() - 0.5) * 0.5,
+      });
+      const next = V.add(pos, V.scale(d, segLen));
+      // draw segment
+      const draws = 6;
+      for (let s = 0; s <= draws; s++) {
+        const t = s / draws;
+        const p = {
+          x: pos.x + (next.x - pos.x) * t,
+          y: pos.y + (next.y - pos.y) * t,
+          z: pos.z + (next.z - pos.z) * t,
+        };
+        try {
+          const m = mv(d);
+          for (let k = 0; k < 2; k++) dim.spawnParticle(pickPalette(color), p, m);
+        } catch {}
+      }
+      if (onSegment) safeRun(() => onSegment(next, d, step));
+      // per-segment entity hit
+      if (source && onEntityHit) {
+        try {
+          const ents = dim.getEntities({ location: next, maxDistance: hitRadius, excludeTypes: ["item"] });
+          for (const e of ents) {
+            if (e.id === source.id) continue;
+            if (hitSet.has(e.id)) continue;
+            hitSet.add(e.id);
+            safeRun(() => onEntityHit(e, step));
+          }
+        } catch {}
+      }
+      // branch
+      if (depth > 0 && Math.random() < branchChance) {
+        const branch = V.norm({
+          x: d.x + (Math.random() - 0.5) * 1.8,
+          y: d.y + (Math.random() - 0.5) * 1.8,
+          z: d.z + (Math.random() - 0.5) * 1.8,
+        });
+        animatedForkedBolt(dim, next, branch, {
+          ...opts, length: length * 0.4, depth: depth - 1, seen: hitSet,
+        });
+      }
+      pos = next;
+      step++;
+    }
+  }, 1);
+}
+
+// small internal helper mirroring pick() but exported name kept private
+function pickPalette(color) {
+  return pick(color);
 }

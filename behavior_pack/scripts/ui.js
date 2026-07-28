@@ -159,7 +159,8 @@ function openHelp(player) {
     .title("§l§7How To Use§r")
     .body(
       "§l§6AVATAR ADDON§r\n\n" +
-      "§eOpen this menu:§r  chat §f.a§r  or  §f/scriptevent avatar:menu§r\n\n" +
+      "§eOpen this menu:§r  §fright-click your Avatar Scroll§r\n"
+      + "  or chat §f.a§r  or  §f/scriptevent avatar:menu§r\n\n" +
       "§eActivate an ability:§r select the hotbar slot, then §ftap Sneak§r.\n" +
       "  Empty slots do nothing — normal sneak still works there.\n\n" +
       "§eAbility modes:§r\n" +

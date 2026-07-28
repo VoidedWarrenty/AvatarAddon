@@ -25,7 +25,8 @@ switchable preset loadouts, and **no items required** to trigger anything.
 
 | Action | Input |
 | --- | --- |
-| Open the bending menu | Chat `.a` · `/scriptevent avatar:menu` |
+| Open the bending menu | **Right-click your Avatar Scroll** (given on first join) |
+| Also opens menu | Chat `.a` · `/scriptevent avatar:menu` |
 | Fire a bound ability | Select the hotbar slot, **tap Sneak** |
 | Chargeup abilities (Lightning, Combustion) | **Hold** Sneak to charge, release to fire |
 | Primed abilities (Fire Blast, Fire Sweep) | Sneak arms N charges — each **attack** fires one |

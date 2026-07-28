@@ -1,6 +1,6 @@
 import { EntityDamageCause, system } from "@minecraft/server";
 import { V, eyePos, lookDir, broadcastSound, safeRun } from "../util.js";
-import { spawnBurst, spawnRing, spawnBeam, spawnExplosion, spawnAura, spawnForkedBolt, damageAlongPath } from "../fx.js";
+import { spawnBurst, spawnRing, spawnBeam, spawnExplosion, spawnAura, spawnForkedBolt, animatedForkedBolt, damageAlongPath } from "../fx.js";
 
 function damageAt(dim, center, radius, damage, source, cause = EntityDamageCause.fire, ignite = 0) {
   const ents = dim.getEntities({ location: center, maxDistance: radius, excludeTypes: ["item"] });
@@ -161,18 +161,30 @@ function lightningRelease(player, ticks) {
   const damage = 8 + power * 12;
   broadcastSound(dim, "ambient.weather.thunder", from, 2.5, 1.4);
   broadcastSound(dim, "mob.warden.sonic_boom", from, 1.5, 1.2);
-  for (let b = 0; b < 4; b++) {
+  const seen = new Set();
+  for (let b = 0; b < 3; b++) {
     const startDir = V.norm({
       x: dir.x + (Math.random() - 0.5) * 0.12,
       y: dir.y + (Math.random() - 0.5) * 0.12,
       z: dir.z + (Math.random() - 0.5) * 0.12,
     });
-    spawnForkedBolt(dim, from, startDir, "lightning", length, 3);
+    animatedForkedBolt(dim, from, startDir, {
+      color: "lightning",
+      length,
+      segLen: 0.7,
+      segmentsPerTick: 4,
+      hitRadius: 1.7,
+      branchChance: 0.35,
+      depth: 3,
+      source: player,
+      seen,
+      onEntityHit: (e) => {
+        safeRun(() => e.applyDamage(damage, { cause: EntityDamageCause.lightning, damagingEntity: player }));
+        spawnExplosion(dim, e.location, "lightning", 1.6);
+        try { dim.playSound("random.explode", e.location, { volume: 0.6, pitch: 1.4 }); } catch {}
+      },
+    });
   }
-  damageAlongPath(dim, from, dir, length, 1.8, player, (e) => {
-    safeRun(() => e.applyDamage(damage, { cause: EntityDamageCause.lightning, damagingEntity: player }));
-    spawnExplosion(dim, e.location, "lightning", 1.6);
-  });
 }
 
 // ---------- Combustion (CHARGEUP + ARCING PROJECTILE) ----------
