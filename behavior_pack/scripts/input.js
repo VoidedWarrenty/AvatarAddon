@@ -24,7 +24,7 @@ function ctxOf(player) {
 function tryFire(player, slot) {
   const st = loadState(player);
   if (!st.element) {
-    msg(player, "§cNo element chosen — chat §f.a§c to open the menu.");
+    msg(player, "§cNo element chosen — triple-tap Sneak or run §f/scriptevent avatar:menu§c.");
     return false;
   }
   const preset = getActivePreset(st);

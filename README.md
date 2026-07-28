@@ -25,11 +25,11 @@ switchable preset loadouts, and **no items required** to trigger anything.
 
 | Action | Input |
 | --- | --- |
-| Open the bending menu | Chat `.a` (or `.avatar`, `!avatar`, `.menu`) |
-| Also open menu | Triple-tap Sneak within 1 second |
+| Open the bending menu | **Triple-tap Sneak** (within ~1 s) |
+| Also open menu | `/scriptevent avatar:menu` (works everywhere) |
+| Also open menu | Chat `.a` (works only where `chatSend` is exposed) |
 | Fire a bound ability | Hold **Sneak** + press hotbar slot **1–9** |
-| Quick-switch preset | Chat `.p1`, `.p2`, or `.p3` |
-| Help | Chat `.help` |
+| Quick-switch preset | `/scriptevent avatar:p1` · `avatar:p2` · `avatar:p3` |
 
 ## Installation
 

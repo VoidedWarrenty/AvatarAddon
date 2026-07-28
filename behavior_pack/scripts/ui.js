@@ -159,11 +159,11 @@ function openHelp(player) {
     .title("§l§7How To Use§r")
     .body(
       "§l§6AVATAR ADDON§r\n\n" +
-      "§eOpening this menu:§r  chat §f!avatar§r or §f.a§r\n" +
+      "§eOpen this menu:§r  §fTriple-tap Sneak§r  or  §f/scriptevent avatar:menu§r\n" +
+      "  (chat §f.a§r also works on some Bedrock versions)\n\n" +
       "§eActivate an ability:§r  §fHold Sneak §7then press §f1-9§7 on your hotbar.§r\n" +
       "  When you release sneak, your original slot is restored.\n\n" +
-      "§eQuick preset switch:§r chat §f.p1§r  §f.p2§r  §f.p3§r\n" +
-      "§eClose menus:§r use ESC / back arrow.\n\n" +
+      "§eQuick preset switch:§r  §f/scriptevent avatar:p1§r  §f...:p2§r  §f...:p3§r\n\n" +
       "§7Tip: you can bind different loadouts to each preset —\n" +
       "§7e.g. one for combat, one for mobility, one for utility.§r"
     )
