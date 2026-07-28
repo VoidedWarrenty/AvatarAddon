@@ -1,8 +1,9 @@
 import { world, system } from "@minecraft/server";
 import { openMain } from "./ui.js";
-import { startInputLoop, forgetPlayer } from "./input.js";
+import { startInputLoop, forgetPlayer, onPlayerAttack } from "./input.js";
 import { loadState, saveState } from "./state.js";
 import { tickTempBlocks } from "./abilities/earth.js";
+import { startSidebarLoop, bustSidebarCache } from "./sidebar.js";
 import { msg, safeRun } from "./util.js";
 
 const CHAT_COMMANDS = new Set([
@@ -18,6 +19,7 @@ function handleCommand(player, cmd) {
     const st = loadState(player);
     st.activePreset = idx;
     saveState(player, st);
+    bustSidebarCache();
     msg(player, `§aActive preset: §e${st.presetNames[idx]}`);
     return;
   }
@@ -54,12 +56,28 @@ system.afterEvents.scriptEventReceive.subscribe((ev) => {
   system.run(() => safeRun(() => handleCommand(player, cmd)));
 });
 
+if (world.afterEvents.entityHitEntity) {
+  world.afterEvents.entityHitEntity.subscribe((ev) => {
+    const p = ev.damagingEntity;
+    if (!p || p.typeId !== "minecraft:player") return;
+    safeRun(() => onPlayerAttack(p));
+  });
+}
+if (world.afterEvents.entityHitBlock) {
+  world.afterEvents.entityHitBlock.subscribe((ev) => {
+    const p = ev.damagingEntity;
+    if (!p || p.typeId !== "minecraft:player") return;
+    safeRun(() => onPlayerAttack(p));
+  });
+}
+
 world.afterEvents.playerSpawn.subscribe((ev) => {
   if (!ev.initialSpawn) return;
   const p = ev.player;
   system.runTimeout(() => {
-    msg(p, "§6Avatar loaded — triple-tap Sneak or run §f/scriptevent avatar:menu§6.");
+    msg(p, "§6Avatar loaded — chat §f.a§6 or §f/scriptevent avatar:menu§6.");
   }, 40);
+  bustSidebarCache();
 });
 
 world.afterEvents.playerLeave.subscribe((ev) => {
@@ -67,6 +85,7 @@ world.afterEvents.playerLeave.subscribe((ev) => {
 });
 
 startInputLoop();
+startSidebarLoop();
 
 system.runInterval(() => {
   tickTempBlocks();

@@ -159,13 +159,16 @@ function openHelp(player) {
     .title("§l§7How To Use§r")
     .body(
       "§l§6AVATAR ADDON§r\n\n" +
-      "§eOpen this menu:§r  §fTriple-tap Sneak§r  or  §f/scriptevent avatar:menu§r\n" +
-      "  (chat §f.a§r also works on some Bedrock versions)\n\n" +
-      "§eActivate an ability:§r  §fHold Sneak §7then press §f1-9§7 on your hotbar.§r\n" +
-      "  When you release sneak, your original slot is restored.\n\n" +
-      "§eQuick preset switch:§r  §f/scriptevent avatar:p1§r  §f...:p2§r  §f...:p3§r\n\n" +
-      "§7Tip: you can bind different loadouts to each preset —\n" +
-      "§7e.g. one for combat, one for mobility, one for utility.§r"
+      "§eOpen this menu:§r  chat §f.a§r  or  §f/scriptevent avatar:menu§r\n\n" +
+      "§eActivate an ability:§r select the hotbar slot, then §ftap Sneak§r.\n" +
+      "  Empty slots do nothing — normal sneak still works there.\n\n" +
+      "§eAbility modes:§r\n" +
+      "  §f· Instant§r — fires on sneak tap\n" +
+      "  §f· Chargeup§r (Lightning, Combustion) — hold sneak to charge, release to fire\n" +
+      "  §f· Primed§r (Fire Blast, Fire Sweep) — sneak arms N charges, then each attack fires one\n\n" +
+      "§eCombos:§r prime two of Fire Blast + Fire Whip → next attack becomes §fFire Arc§r.\n" +
+      "  Cast §fSweep → Fireball → Sweep§r within 5 s → §fWheel of Fire§r.\n\n" +
+      "§eQuick preset switch:§r  §f/scriptevent avatar:p1§r  §f...:p2§r  §f...:p3§r"
     )
     .button1("§aGot it")
     .button2("§7Back");

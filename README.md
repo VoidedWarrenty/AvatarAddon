@@ -25,11 +25,38 @@ switchable preset loadouts, and **no items required** to trigger anything.
 
 | Action | Input |
 | --- | --- |
-| Open the bending menu | **Triple-tap Sneak** (within ~1 s) |
-| Also open menu | `/scriptevent avatar:menu` (works everywhere) |
-| Also open menu | Chat `.a` (works only where `chatSend` is exposed) |
-| Fire a bound ability | Hold **Sneak** + press hotbar slot **1–9** |
+| Open the bending menu | Chat `.a` · `/scriptevent avatar:menu` |
+| Fire a bound ability | Select the hotbar slot, **tap Sneak** |
+| Chargeup abilities (Lightning, Combustion) | **Hold** Sneak to charge, release to fire |
+| Primed abilities (Fire Blast, Fire Sweep) | Sneak arms N charges — each **attack** fires one |
+| Attack | Left-click a mob or a block (Bedrock melee) |
 | Quick-switch preset | `/scriptevent avatar:p1` · `avatar:p2` · `avatar:p3` |
+
+Empty hotbar slots do nothing on sneak — regular crouch behavior is preserved
+whenever the slot has no binding.
+
+## HUD
+
+A sidebar scoreboard on the right shows the active element, active preset,
+and every slot's binding. It refreshes automatically when you change presets
+or bindings.
+
+## Ability modes
+
+- **Instant** — the classic: fires immediately when you sneak.
+- **Chargeup** — while sneak is held, particles + sound intensify; release
+  scales the power. Currently: Lightning (blue forking bolts, damage scales
+  with charge) and Combustion (arcing orb that steers toward your gaze).
+- **Primed** — sneak grants N attack-charges with a visible aura; each melee
+  swing consumes one and unleashes the ability's attack effect. Charges
+  expire after ~10 s. Currently: Fire Blast (3), Fire Sweep (3).
+
+## Combos
+
+- **Fire Arc** — prime Fire Blast, then prime Fire Whip (or vice versa) →
+  a huge fanning arc of flame replaces the next hit.
+- **Wheel of Fire** — cast Fire Sweep → Fireball → Fire Sweep within 5 s →
+  a rolling wheel of fire tears forward.
 
 ## Installation
 
