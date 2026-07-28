@@ -1,0 +1,23 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Avatar: The Last Airbender RP",
+    "description": "Bending particles, projectile visuals, and elemental FX.",
+    "uuid": "8e1b2d50-6c5b-5f3b-ae21-2b3c4d5e6f01",
+    "version": [1, 0, 0],
+    "min_engine_version": [1, 21, 50]
+  },
+  "modules": [
+    {
+      "type": "resources",
+      "uuid": "8e1b2d50-6c5b-5f3b-ae21-2b3c4d5e6f02",
+      "version": [1, 0, 0]
+    }
+  ],
+  "dependencies": [
+    {
+      "uuid": "7f2a1c40-5b4a-4e2a-9d10-1a2b3c4d5e01",
+      "version": [1, 0, 0]
+    }
+  ]
+}
